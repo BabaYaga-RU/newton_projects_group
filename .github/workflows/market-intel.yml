@@ -1,12 +1,12 @@
-name: SRE Telemetry Sync
+name: Market Intel Sync
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "0 * * * *" # Roda toda hora
   workflow_dispatch:
 
 jobs:
-  telemetry-sync:
+  analyze:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,43 +16,45 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Git Config
+      - name: Setup Core
+        run: pip install duckduckgo_search
+
+      - name: Identity Config
         run: |
           git config --global user.name "BabaYaga-RU"
           git config --global user.email "p201952589703@gmail.com"
 
       - name: Buffer Delay
-        run: sleep $(( ( RANDOM % 903 ) + 2700 ))
+        run: sleep $(( ( RANDOM % 903 ) + 2700 )) # 45 a 60 min de espera
 
-      - name: Snapshot Generation
+      - name: Run Market Analysis
         id: snap
         run: |
-          BRANCH_ID="sync/data-$(openssl rand -hex 3)"
+          BRANCH_ID="intel/sync-$(openssl rand -hex 3)"
           echo "B_ID=$BRANCH_ID" >> $GITHUB_OUTPUT
           git checkout -b $BRANCH_ID
           
           python monitor.py
           git add .
           
-          MSG="chore(data): refresh internal telemetry snapshot $(date +'%Y.%m.%d')"
+          MSG="chore(intel): update global trend intelligence $(date +'%Y.%m.%d')"
           CO="Co-authored-by: arthurperico <arthurperico1212@gmail.com>"
           
           git commit -m "$MSG" -m "$CO"
-          
           git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git $BRANCH_ID
 
-      - name: Analytics Processing
-        run: sleep $(( ( RANDOM % 120 ) + 300 ))
+      - name: Validation Pause
+        run: sleep $(( ( RANDOM % 120 ) + 300 )) 
 
-      - name: Finalize Sync
+      - name: Commit & Merge PR
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          TITLE="telemetry: sync data-$(date +'%H%M')"
-          BODY="Automated synchronization of cluster health and intelligence data."
+          TITLE="intel: sync snapshot $(date +'%H%M')"
+          BODY="Automated ingestion of retail market trends and consumer behavior data."
           
           PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
           
-          sleep $(( ( RANDOM % 180 ) + 420 ))
+          sleep $(( ( RANDOM % 180 ) + 420 )) # 7 a 10 min de espera antes do merge
           
           gh pr merge "$PR_URL" --squash --delete-branch --admin
