@@ -2,7 +2,7 @@ name: Market Intel Sync
 
 on:
   schedule:
-    - cron: "0 * * * *" # Roda toda hora
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -25,7 +25,8 @@ jobs:
           git config --global user.email "p201952589703@gmail.com"
 
       - name: Buffer Delay
-        run: sleep $(( ( RANDOM % 903 ) + 2700 )) # 45 a 60 min de espera
+        if: github.event_name == 'schedule'
+        run: sleep $(( ( RANDOM % 903 ) + 2700 ))
 
       - name: Run Market Analysis
         id: snap
@@ -44,7 +45,8 @@ jobs:
           git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git $BRANCH_ID
 
       - name: Validation Pause
-        run: sleep $(( ( RANDOM % 120 ) + 300 )) 
+        if: github.event_name == 'schedule'
+        run: sleep $(( ( RANDOM % 120 ) + 300 ))
 
       - name: Commit & Merge PR
         env:
@@ -55,6 +57,8 @@ jobs:
           
           PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
           
-          sleep $(( ( RANDOM % 180 ) + 420 )) # 7 a 10 min de espera antes do merge
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            sleep $(( ( RANDOM % 180 ) + 420 ))
+          fi
           
           gh pr merge "$PR_URL" --squash --delete-branch --admin
