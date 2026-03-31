@@ -1,4 +1,4 @@
-name: Legacy Backfill Arthur Long
+name: Legacy Backfill Long
 
 on: 
   workflow_dispatch:
@@ -7,9 +7,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false # Impede o uso do token padrão limitado
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -18,7 +20,6 @@ jobs:
 
       - name: Config Git Identity
         run: |
-          # Identidade oficial do GitHub Actions Bot
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
@@ -26,9 +27,9 @@ jobs:
         run: python legacy_fill.py
 
       - name: Push Changes
-        env:
-          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
+          git config --local --unset-all http.https://github.com/.extraheader
           git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git
+      
           git pull origin main --rebase
           git push origin main
