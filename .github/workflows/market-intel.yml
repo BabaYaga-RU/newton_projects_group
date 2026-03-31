@@ -1,8 +1,8 @@
-name: Market Intel Sync
+name: Market Intel Sync - Random Stealth 100
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "*/5 * * * *" 
   workflow_dispatch:
 
 jobs:
@@ -16,49 +16,44 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Core
-        run: pip install duckduckgo_search
-
-      - name: Identity Config
+      - name: Setup & Identity
         run: |
+          pip install duckduckgo_search
           git config --global user.name "BabaYaga-RU"
           git config --global user.email "p201952589703@gmail.com"
 
-      - name: Buffer Delay
-        if: github.event_name == 'schedule'
-        run: sleep $(( ( RANDOM % 903 ) + 2700 ))
+      - name: Human Delay Before Start
+        run: sleep $(( ( RANDOM % 50 ) + 15 ))
 
       - name: Run Market Analysis
         id: snap
         run: |
-          BRANCH_ID="intel/sync-$(openssl rand -hex 3)"
+          BRANCH_ID="intel/sync-$(date +%s)"
           echo "B_ID=$BRANCH_ID" >> $GITHUB_OUTPUT
           git checkout -b $BRANCH_ID
           
           python monitor.py
           git add .
           
-          MSG="chore(intel): update global trend intelligence $(date +'%Y.%m.%d')"
+          MSG="chore(intel): update snapshot $(date +'%H%M%S')"
           CO="Co-authored-by: arthurperico <arthurperico1212@gmail.com>"
           
           git commit -m "$MSG" -m "$CO"
-          git push https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git $BRANCH_ID
+          git push origin $BRANCH_ID
 
       - name: Validation Pause
-        if: github.event_name == 'schedule'
-        run: sleep $(( ( RANDOM % 120 ) + 300 ))
+        run: sleep $(( ( RANDOM % 60 ) + 20 ))
 
       - name: Commit & Merge PR
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          TITLE="intel: sync snapshot $(date +'%H%M')"
-          BODY="Automated ingestion of retail market trends and consumer behavior data."
-          
+          TITLE="intel: sync $(date +'%M%S')"
+          BODY="Automated market data sync process."
+
           PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
           
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            sleep $(( ( RANDOM % 180 ) + 420 ))
-          fi
+          # Pausa aleatória entre 45 e 120 segundos para simular "tempo de análise"
+          sleep $(( ( RANDOM % 75 ) + 45 ))
           
           gh pr merge "$PR_URL" --squash --delete-branch --admin
