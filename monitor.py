@@ -5,7 +5,7 @@ import random
 from datetime import datetime
 from duckduckgo_search import DDGS
 
-# Temas de pesquisa para diversificar as tendências
+# Temas de pesquisa para as tendências
 TEMAS = [
     "trending ecommerce products 2026",
     "most popular consumer electronics march 2026",
