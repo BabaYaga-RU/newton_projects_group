@@ -25,24 +25,34 @@ jobs:
       - name: Human Delay Before Start
         run: sleep $(( ( RANDOM % 50 ) + 15 ))
 
-      # --- BLOCO DE BOOST DE VIEWS ---
-      - name: Boost Profile Views
+      # --- BLOCO DE BOOST DE VIEWS (ESTRATÉGIA PROXY) ---
+      - name: Boost Profile Views (High Intensity)
         run: |
-          # Links diretos (sem o Camo do GitHub para não travar o cache)
           URL_BABA="https://komarev.com/ghpvc/?username=BabaYaga-RU&color=00FF41&style=for-the-badge"
           URL_PK="https://komarev.com/ghpvc/?username=PkLavc&color=00d1ff&style=for-the-badge"
           
-          echo "Iniciando rajada de views..."
-          # Faz 50 acessos rápidos por execução para acelerar o contador
-          for i in {1..50}
-          do
-            # User-agent aleatório para parecer acessos de pessoas diferentes
-            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3$i"
-            curl -A "$UA" -s "$URL_BABA" > /dev/null
-            curl -A "$UA" -s "$URL_PK" > /dev/null
-            sleep 0.5
-          done
-          echo "Rajada finalizada."
+          echo "Buscando lista de proxies frescos..."
+          # Obtém uma lista de proxies HTTP gratuitos para rotacionar o IP
+          curl -s "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=all" > proxies.txt
+          
+          echo "Iniciando ataque de views com IPs rotativos..."
+          count=0
+          # O loop lê os proxies e dispara as requisições em paralelo
+          while read -r line && [ $count -lt 50 ]; do
+            # User-Agent realista para cada requisição
+            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+            
+            # Dispara em background (&) para ganhar velocidade
+            curl -x "$line" -A "$UA" -s -m 5 "$URL_BABA" > /dev/null && echo "Hit BabaYaga via $line" &
+            curl -x "$line" -A "$UA" -s -m 5 "$URL_PK" > /dev/null && echo "Hit PkLavc via $line" &
+            
+            count=$((count+1))
+            # Pequeno delay para o sistema de arquivos processar os logs
+            sleep 0.1
+          done < proxies.txt
+          
+          wait
+          echo "Rajada de views finalizada com proxies."
 
       - name: Run Market Analysis
         id: snap
@@ -51,7 +61,6 @@ jobs:
           echo "B_ID=$BRANCH_ID" >> $GITHUB_OUTPUT
           git checkout -b $BRANCH_ID
           
-          # Garante que o monitor.py existe ou cria um mock se necessário
           python monitor.py
           git add .
           
@@ -73,7 +82,6 @@ jobs:
 
           PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
           
-          # Pausa aleatória para simular análise humana
           sleep $(( ( RANDOM % 75 ) + 45 ))
           
           gh pr merge "$PR_URL" --squash --delete-branch --admin
