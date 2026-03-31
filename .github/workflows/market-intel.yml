@@ -19,18 +19,43 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
 
-      - name: Setup & Identity
+      - name: Check Daily Success Limit
+        id: limit
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          pip install ddgs  # Atualizado para evitar o warning
+          TODAY=$(date +%Y-%m-%d)
+          
+          # Filtra apenas por status 'success' e data de hoje
+          SUCCESS_COUNT=$(gh run list \
+            --workflow "Market Intel Sync - Enterprise Data" \
+            --status success \
+            --created "$TODAY" \
+            --json databaseId --jq 'length')
+          
+          echo "Sucessos hoje: $SUCCESS_COUNT"
+          echo "count=$SUCCESS_COUNT" >> $GITHUB_OUTPUT
+          
+          if [ "$SUCCESS_COUNT" -ge 100 ]; then
+            echo "Meta de 100 sucessos atingida. Parando por hoje."
+            echo "should_trigger=false" >> $GITHUB_OUTPUT
+          else
+            echo "should_trigger=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Setup & Identity
+        if: steps.limit.outputs.should_trigger == 'true'
+        run: |
+          pip install ddgs
           git config --global user.name "BabaYaga-RU"
           git config --global user.email "p201952589703@gmail.com"
 
       - name: Process Market Snapshots
+        if: steps.limit.outputs.should_trigger == 'true'
         id: snap
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          # Garante que estamos na main limpa
           git checkout main
           git pull origin main --rebase
 
@@ -43,30 +68,22 @@ jobs:
           if ! git diff --cached --quiet; then
             MSG="chore(intel): update global trend intelligence $(date +'%Y.%m.%d %H:%M')"
             CO="Co-authored-by: arthurperico <arthurperico1212@gmail.com>"
-            
             git commit -m "$MSG" -m "$CO"
             git push origin "$BRANCH_ID"
 
-            TITLE="feat(intel): sync market snapshot $(date +'%Y.%m.%d')"
-            BODY="Automated update."
-
-            # Cria o PR e captura a URL limpa
-            PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head "$BRANCH_ID" --json url -q .url)
+            PR_URL=$(gh pr create --title "feat(intel): sync $(date +'%Y.%m.%d')" --body "Auto update." --base main --head "$BRANCH_ID" --json url -q .url)
             
-            # O SEGREDO: --auto e --admin juntos forçam o merge assim que a API liberar, 
-            # sem que o script retorne erro de 'not mergeable'
-            gh pr merge "$PR_URL" --squash --delete-branch --admin --auto || \
-            (sleep 5 && gh pr merge "$PR_URL" --squash --delete-branch --admin)
-
-            echo "merged=true" >> $GITHUB_OUTPUT
+            # Força o merge com admin e auto
+            gh pr merge "$PR_URL" --squash --delete-branch --admin --auto || (sleep 5 && gh pr merge "$PR_URL" --squash --delete-branch --admin)
           else
-            echo "No delta found."
-            echo "merged=false" >> $GITHUB_OUTPUT
+            echo "Sem alterações no snapshot."
           fi
 
       - name: Trigger next run
-        if: always()
+        # Só dispara se ainda não chegamos em 100 SUCESSOS
+        if: always() && steps.limit.outputs.should_trigger == 'true'
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          gh workflow run "Market Intel Sync - Enterprise Data" || echo "Cron window wait."
+          echo "Ainda abaixo da meta de 100 sucessos. Disparando próxima..."
+          gh workflow run "Market Intel Sync - Enterprise Data" || echo "Aguardando janela do cron."
