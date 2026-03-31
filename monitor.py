@@ -3,7 +3,7 @@ import base64
 import os
 import random
 from datetime import datetime
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 # Temas de pesquisa para as tendências
 TEMAS = [
