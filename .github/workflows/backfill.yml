@@ -1,0 +1,32 @@
+name: Legacy Backfill Arthur Long
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Config Git Identity
+        run: |
+          # Identidade oficial do GitHub Actions Bot
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Backfill Script
+        run: python legacy_fill.py
+
+      - name: Push Changes
+        run: |
+          # Adicionando tratamento de erro caso o push precise de um pull antes
+          git pull origin main --rebase
+          git push origin main
