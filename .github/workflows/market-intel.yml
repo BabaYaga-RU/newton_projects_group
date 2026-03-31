@@ -1,4 +1,4 @@
-name: Market Intel Sync - Random Stealth 100
+name: Market Intel Sync - Enterprise Data
 
 on:
   schedule:
@@ -23,61 +23,35 @@ jobs:
           git config --global user.email "p201952589703@gmail.com"
 
       - name: Human Delay Before Start
-        run: sleep $(( ( RANDOM % 50 ) + 15 ))
+        run: sleep $(( ( RANDOM % 30 ) + 10 ))
 
-      # --- BLOCO DE BOOST DE VIEWS (APENAS BABAYAGA) ---
-      - name: Boost Profile Views (High Intensity)
-        run: |
-          URL_BABA="https://komarev.com/ghpvc/?username=BabaYaga-RU&color=00FF41&style=for-the-badge"
-          
-          echo "Buscando lista de proxies frescos..."
-          # Obtém uma lista de proxies HTTP gratuitos para rotacionar o IP
-          curl -s "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=all" > proxies.txt
-          
-          echo "Iniciando ataque de views focado em BabaYaga-RU..."
-          count=0
-          # O loop lê os proxies e dispara as requisições em paralelo
-          while read -r line && [ $count -lt 50 ]; do
-            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            
-            # Foca todos os recursos apenas na URL do BabaYaga
-            curl -x "$line" -A "$UA" -s -m 5 "$URL_BABA" > /dev/null && echo "Hit BabaYaga via $line" &
-            
-            count=$((count+1))
-            sleep 0.1
-          done < proxies.txt
-          
-          wait
-          echo "Rajada de views finalizada."
-
-      - name: Run Market Analysis
+      - name: Process Market Snapshots
         id: snap
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          BRANCH_ID="intel/sync-$(date +%s)"
-          echo "B_ID=$BRANCH_ID" >> $GITHUB_OUTPUT
-          git checkout -b $BRANCH_ID
+          git pull origin main --rebase
+
+          BRANCH_ID="intel/update-$(date +%s)"
+          git checkout -b "$BRANCH_ID"
           
           python monitor.py
           git add .
           
-          MSG="chore(intel): update snapshot $(date +'%H%M%S')"
-          CO="Co-authored-by: arthurperico <arthurperico1212@gmail.com>"
-          
-          git commit -m "$MSG" -m "$CO"
-          git push origin $BRANCH_ID
+          if ! git diff --cached --quiet; then
+            MSG="chore(intel): update global trend intelligence $(date +'%Y.%m.%d %H:%M')"
+            CO="Co-authored-by: arthurperico <arthurperico1212@gmail.com>"
+            
+            git commit -m "$MSG" -m "$CO"
+            git push origin "$BRANCH_ID"
 
-      - name: Validation Pause
-        run: sleep $(( ( RANDOM % 60 ) + 20 ))
+            TITLE="feat(intel): sync market snapshot $(date +'%Y.%m.%d')"
+            BODY="Periodic synchronization of global market intelligence data. Automated update for trend analysis."
 
-      - name: Commit & Merge PR
-        env:
-          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        run: |
-          TITLE="intel: sync $(date +'%M%S')"
-          BODY="Automated market data sync process."
-
-          PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
-          
-          sleep $(( ( RANDOM % 75 ) + 45 ))
-          
-          gh pr merge "$PR_URL" --squash --delete-branch --admin
+            PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head "$BRANCH_ID")
+            sleep $(( ( RANDOM % 60 ) + 40 ))
+            
+            gh pr merge "$PR_URL" --squash --delete-branch --admin
+          else
+            echo "No delta found in snapshots."
+          fi
