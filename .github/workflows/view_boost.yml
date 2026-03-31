@@ -1,32 +1,36 @@
-name: Profile View Boost - BabaYaga
+name: Profile View Boost - BabaYaga Stealth
 
 on:
   schedule:
-    - cron: "*/10 * * * *" # Roda a cada 10 minutos para não estressar o IP
+    - cron: "*/10 * * * *" # Roda a cada 10 minutos para não queimar os proxies
   workflow_dispatch:
 
 jobs:
   boost:
     runs-on: ubuntu-latest
     steps:
-      - name: Boost Profile Views (Proxy Strategy)
+      - name: Dynamic Proxy Injection
         run: |
-          URL_BABA="https://komarev.com/ghpvc/?username=BabaYaga-RU&color=00FF41&style=for-the-badge"
+          URL="https://komarev.com/ghpvc/?username=BabaYaga-RU&color=00FF41&style=for-the-badge"
           
-          echo "Buscando lista de proxies..."
-          curl -s "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1000&country=all&ssl=all&anonymity=all" > proxies.txt
+          echo "Coletando lista de IPs globais..."
+          # Baixa proxies de diversos países para burlar o rate-limit
+          curl -s "https://api.proxyscrape.com/v2/?request=displayproxies&protocol=http&timeout=1500&country=all&ssl=all&anonymity=all" > proxies.txt
           
-          echo "Iniciando rajada..."
+          echo "Iniciando ciclo de visualizações reais..."
           count=0
-          while read -r line && [ $count -lt 60 ]; do
-            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+          # Vamos processar 40 por vez para garantir que o servidor aceite
+          while read -r proxy && [ $count -lt 40 ]; do
+            # Muda o User-Agent a cada hit para simular dispositivos diferentes
+            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/12$((RANDOM%9)).0.0.$((RANDOM%99)) Safari/537.36"
             
-            # Dispara em paralelo focado apenas no seu user
-            curl -x "$line" -A "$UA" -s -m 5 "$URL_BABA" > /dev/null && echo "Hit via $line" &
+            # O '-x' passa pelo proxy, o '-m 7' evita travar em IPs lentos
+            curl -x "$proxy" -A "$UA" -s -m 7 "$URL" > /dev/null && echo "Success: Hit via $proxy" &
             
             count=$((count+1))
-            sleep 0.1
+            # Pausa milimétrica para não parecer um ataque DOS
+            sleep 0.3
           done < proxies.txt
           
           wait
-          echo "Boost finalizado."
+          echo "Ciclo finalizado. Verifique o contador em alguns minutos."
