@@ -1,4 +1,4 @@
-name: process test
+name: Process test
 
 on:
   schedule:
@@ -19,9 +19,25 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          REPO_INFO=$(gh api graphql -f query='{repository(owner:"BabaYaga-RU",name:"newton_projects_group"){id,discussionCategories(first:10){nodes{id,name}}}}')
+          # 1. Busca os IDs e encontra a categoria que ACEITA respostas (isAnswerable)
+          REPO_INFO=$(gh api graphql -f query='{
+            repository(owner:"BabaYaga-RU",name:"newton_projects_group"){
+              id
+              discussionCategories(first:10){
+                nodes{ id, name, isAnswerable }
+              }
+            }
+          }')
+          
           REPO_ID=$(echo $REPO_INFO | jq -r '.data.repository.id')
-          CATEGORY_ID=$(echo $REPO_INFO | jq -r '.data.repository.discussionCategories.nodes[] | select(.name=="General") | .id')
+          
+          # Isso aqui garante que ele pegue a categoria "Q&A" que você ativou
+          CATEGORY_ID=$(echo $REPO_INFO | jq -r '.data.repository.discussionCategories.nodes[] | select(.isAnswerable==true) | .id')
+
+          if [ -z "$CATEGORY_ID" ] || [ "$CATEGORY_ID" == "null" ]; then
+            echo "Erro: Nenhuma categoria com Q&A ativado foi encontrada."
+            exit 1
+          fi
 
           TITLES=(
             "Documentation: Handling race conditions in high-frequency polling"
@@ -32,18 +48,21 @@ jobs:
           )
           SELECTED_TITLE=${TITLES[$RANDOM % ${#TITLES[@]}]}
 
+          # 2. Abre a Discussão
           DISCUSSION_DATA=$(gh api graphql -f query='
             mutation($repoId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
               createDiscussion(input: {repositoryId: $repoId, categoryId: $categoryId, title: $title, body: $body}) {
                 discussion { id }
               }
-            }' -f repoId="$REPO_ID" -f categoryId="$CATEGORY_ID" -f title="$SELECTED_TITLE" -f body="System log: Documentation request for $SELECTED_TITLE implementation details.")
+            }' -f repoId="$REPO_ID" -f categoryId="$CATEGORY_ID" -f title="$SELECTED_TITLE" -f body="System log: Documentation request for $SELECTED_TITLE.")
 
           DISCUSSION_ID=$(echo $DISCUSSION_DATA | jq -r '.data.createDiscussion.discussion.id')
           
+          # Delay aleatório de 5 a 11 min (Simula leitura)
           sleep $(( ( RANDOM % 360 ) + 300 ))
 
-          DOC_BODY="The system utilizes atomic write operations and locking mechanisms to ensure consistency. Details are available in the monitor.py source comments. Verification complete."
+          # 3. Posta a Resposta
+          DOC_BODY="The system utilizes atomic write operations and locking mechanisms to ensure consistency. Details are available in the monitor.py source comments."
           
           COMMENT_DATA=$(gh api graphql -f query='
             mutation($discId: ID!, $body: String!) {
@@ -54,8 +73,10 @@ jobs:
 
           COMMENT_ID=$(echo $COMMENT_DATA | jq -r '.data.addDiscussionComment.comment.id')
 
+          # Delay aleatório de 1 a 3 min (Simula revisão)
           sleep $(( ( RANDOM % 120 ) + 60 ))
 
+          # 4. Marca como Answer (Onde a medalha é gerada)
           gh api graphql -f query='
             mutation($commentId: ID!) {
               markDiscussionCommentAsAnswer(input: {id: $commentId}) {
@@ -63,4 +84,4 @@ jobs:
               }
             }' -f commentId="$COMMENT_ID"
           
-          echo "Process finished for $SELECTED_TITLE at $(date)"
+          echo "Process finished for $SELECTED_TITLE em $(date)"
