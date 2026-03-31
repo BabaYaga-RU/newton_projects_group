@@ -1,4 +1,4 @@
-name: Legacy Backfill Long
+name: Legacy Backfill Arthur Long
 
 on: 
   workflow_dispatch:
@@ -11,17 +11,19 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          persist-credentials: false # Impede o uso do token padrão limitado
+          persist-credentials: false
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5 # Atualizado para v5
         with:
-          python-version: '3.x'
+          python-version: '3.11' # Versão estável
 
       - name: Config Git Identity
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Aumenta o buffer para aguentar o volume de commits (previne erro 5)
+          git config --global http.postBuffer 524288000
 
       - name: Run Backfill Script
         run: python legacy_fill.py
@@ -29,7 +31,9 @@ jobs:
       - name: Push Changes
         run: |
           git config --local --unset-all http.https://github.com/.extraheader
+          
+          # Configura a URL com o token
           git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git
-      
-          git pull origin main --rebase
-          git push origin main
+          
+          # Força a sincronização. O --force ajuda se houver conflito de histórico.
+          git push origin main --force
