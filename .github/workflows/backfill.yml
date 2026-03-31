@@ -26,7 +26,9 @@ jobs:
         run: python legacy_fill.py
 
       - name: Push Changes
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          # Adicionando tratamento de erro caso o push precise de um pull antes
+          git remote set-url origin https://x-access-token:${{ secrets.ACTIONS_DEPLOY_KEY }}@github.com/${{ github.repository }}.git
           git pull origin main --rebase
           git push origin main
