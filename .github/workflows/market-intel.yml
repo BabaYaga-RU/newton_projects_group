@@ -2,7 +2,7 @@ name: Market Intel Sync - Enterprise Data
 
 on:
   schedule:
-    - cron: "*/5 * * * *" # O GitHub pode atrasar, mas o trigger abaixo resolve.
+    - cron: "*/5 * * * *"
   workflow_dispatch:
 
 jobs:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-      actions: write # Necessário para o 'gh workflow run' funcionar
+      actions: write
     
     steps:
       - uses: actions/checkout@v4
@@ -21,18 +21,17 @@ jobs:
 
       - name: Setup & Identity
         run: |
-          pip install duckduckgo_search
+          pip install ddgs  # Atualizado para evitar o warning
           git config --global user.name "BabaYaga-RU"
           git config --global user.email "p201952589703@gmail.com"
-
-      - name: Human Delay Before Start
-        run: sleep $(( ( RANDOM % 30 ) + 10 ))
 
       - name: Process Market Snapshots
         id: snap
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
+          # Garante que estamos na main limpa
+          git checkout main
           git pull origin main --rebase
 
           BRANCH_ID="intel/update-$(date +%s)"
@@ -49,27 +48,25 @@ jobs:
             git push origin "$BRANCH_ID"
 
             TITLE="feat(intel): sync market snapshot $(date +'%Y.%m.%d')"
-            BODY="Periodic synchronization of global market intelligence data. Automated update for trend analysis."
+            BODY="Automated update."
 
-            # Cria o PR e captura a URL
-            PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head "$BRANCH_ID")
-            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+            # Cria o PR e captura a URL limpa
+            PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head "$BRANCH_ID" --json url -q .url)
             
-            # Delay para simular revisão humana
-            sleep $(( ( RANDOM % 60 ) + 40 ))
-            
-            # Faz o Merge
-            gh pr merge "$PR_URL" --squash --delete-branch --admin
+            # O SEGREDO: --auto e --admin juntos forçam o merge assim que a API liberar, 
+            # sem que o script retorne erro de 'not mergeable'
+            gh pr merge "$PR_URL" --squash --delete-branch --admin --auto || \
+            (sleep 5 && gh pr merge "$PR_URL" --squash --delete-branch --admin)
+
             echo "merged=true" >> $GITHUB_OUTPUT
           else
-            echo "No delta found in snapshots."
+            echo "No delta found."
             echo "merged=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Trigger next run immediately
-        if: always() # Roda mesmo se o merge falhar ou não houver delta, para manter o bot vivo
+      - name: Trigger next run
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          echo "Iniciando próxima execução para evitar atrasos do cron..."
-          gh workflow run "Market Intel Sync - Enterprise Data" || echo "Aguardando próxima janela do cron."
+          gh workflow run "Market Intel Sync - Enterprise Data" || echo "Cron window wait."
