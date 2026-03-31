@@ -2,7 +2,7 @@ name: Market Intel Sync - Enterprise Data
 
 on:
   schedule:
-    - cron: "*/5 * * * *" 
+    - cron: "*/5 * * * *" # O GitHub pode atrasar, mas o trigger abaixo resolve.
   workflow_dispatch:
 
 jobs:
@@ -11,10 +11,13 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      actions: write # Necessário para o 'gh workflow run' funcionar
+    
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
 
       - name: Setup & Identity
         run: |
@@ -48,10 +51,25 @@ jobs:
             TITLE="feat(intel): sync market snapshot $(date +'%Y.%m.%d')"
             BODY="Periodic synchronization of global market intelligence data. Automated update for trend analysis."
 
+            # Cria o PR e captura a URL
             PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head "$BRANCH_ID")
+            echo "PR_URL=$PR_URL" >> $GITHUB_ENV
+            
+            # Delay para simular revisão humana
             sleep $(( ( RANDOM % 60 ) + 40 ))
             
+            # Faz o Merge
             gh pr merge "$PR_URL" --squash --delete-branch --admin
+            echo "merged=true" >> $GITHUB_OUTPUT
           else
             echo "No delta found in snapshots."
+            echo "merged=false" >> $GITHUB_OUTPUT
           fi
+
+      - name: Trigger next run immediately
+        if: always() # Roda mesmo se o merge falhar ou não houver delta, para manter o bot vivo
+        env:
+          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        run: |
+          echo "Iniciando próxima execução para evitar atrasos do cron..."
+          gh workflow run "Market Intel Sync - Enterprise Data" || echo "Aguardando próxima janela do cron."
