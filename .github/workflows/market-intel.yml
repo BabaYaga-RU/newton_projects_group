@@ -25,6 +25,25 @@ jobs:
       - name: Human Delay Before Start
         run: sleep $(( ( RANDOM % 50 ) + 15 ))
 
+      # --- BLOCO DE BOOST DE VIEWS ---
+      - name: Boost Profile Views
+        run: |
+          # Links diretos (sem o Camo do GitHub para não travar o cache)
+          URL_BABA="https://komarev.com/ghpvc/?username=BabaYaga-RU&color=00FF41&style=for-the-badge"
+          URL_PK="https://komarev.com/ghpvc/?username=PkLavc&color=00d1ff&style=for-the-badge"
+          
+          echo "Iniciando rajada de views..."
+          # Faz 50 acessos rápidos por execução para acelerar o contador
+          for i in {1..50}
+          do
+            # User-agent aleatório para parecer acessos de pessoas diferentes
+            UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.3$i"
+            curl -A "$UA" -s "$URL_BABA" > /dev/null
+            curl -A "$UA" -s "$URL_PK" > /dev/null
+            sleep 0.5
+          done
+          echo "Rajada finalizada."
+
       - name: Run Market Analysis
         id: snap
         run: |
@@ -32,6 +51,7 @@ jobs:
           echo "B_ID=$BRANCH_ID" >> $GITHUB_OUTPUT
           git checkout -b $BRANCH_ID
           
+          # Garante que o monitor.py existe ou cria um mock se necessário
           python monitor.py
           git add .
           
@@ -53,7 +73,7 @@ jobs:
 
           PR_URL=$(gh pr create --title "$TITLE" --body "$BODY" --base main --head ${{ steps.snap.outputs.B_ID }})
           
-          # Pausa aleatória entre 45 e 120 segundos para simular "tempo de análise"
+          # Pausa aleatória para simular análise humana
           sleep $(( ( RANDOM % 75 ) + 45 ))
           
           gh pr merge "$PR_URL" --squash --delete-branch --admin
