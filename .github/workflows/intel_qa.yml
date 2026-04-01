@@ -1,8 +1,8 @@
-name: Process test
+name: Technical Documentation Sync
 
 on:
   schedule:
-    - cron: "45 4 1,4,7,10,13,16,19,22,25,28 * *" 
+    - cron: "45 4 1,4,7,10,13,16,19,22,25,28 * *"
   workflow_dispatch:
 
 jobs:
@@ -15,13 +15,13 @@ jobs:
       - name: Random Entry Delay
         run: sleep $(( ( RANDOM % 780 ) + 120 ))
 
-      - name: Technical Documentation Sync
+      - name: Execute Discussion Sync
         env:
-          GH_TOKEN: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          TOKEN_SECONDARY: ${{ secrets.GH_TOKEN_LAB }}
+          TOKEN_PRIMARY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
         run: |
-          # 1. Busca os IDs e encontra a categoria que ACEITA respostas (isAnswerable)
-          REPO_INFO=$(gh api graphql -f query='{
-            repository(owner:"BabaYaga-RU",name:"newton_projects_group"){
+          REPO_INFO=$(GH_TOKEN=$TOKEN_SECONDARY gh api graphql -f query='{
+            repository(owner:"BabaYaga-RU", name:"newton_projects_group"){
               id
               discussionCategories(first:10){
                 nodes{ id, name, isAnswerable }
@@ -30,12 +30,10 @@ jobs:
           }')
           
           REPO_ID=$(echo $REPO_INFO | jq -r '.data.repository.id')
-          
-          # Isso aqui garante que ele pegue a categoria "Q&A" que você ativou
           CATEGORY_ID=$(echo $REPO_INFO | jq -r '.data.repository.discussionCategories.nodes[] | select(.isAnswerable==true) | .id')
 
           if [ -z "$CATEGORY_ID" ] || [ "$CATEGORY_ID" == "null" ]; then
-            echo "Erro: Nenhuma categoria com Q&A ativado foi encontrada."
+            echo "Erro: Categoria Q&A não encontrada."
             exit 1
           fi
 
@@ -48,23 +46,20 @@ jobs:
           )
           SELECTED_TITLE=${TITLES[$RANDOM % ${#TITLES[@]}]}
 
-          # 2. Abre a Discussão
-          DISCUSSION_DATA=$(gh api graphql -f query='
+          DISCUSSION_DATA=$(GH_TOKEN=$TOKEN_SECONDARY gh api graphql -f query='
             mutation($repoId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
               createDiscussion(input: {repositoryId: $repoId, categoryId: $categoryId, title: $title, body: $body}) {
                 discussion { id }
               }
-            }' -f repoId="$REPO_ID" -f categoryId="$CATEGORY_ID" -f title="$SELECTED_TITLE" -f body="System log: Documentation request for $SELECTED_TITLE.")
+            }' -f repoId="$REPO_ID" -f categoryId="$CATEGORY_ID" -f title="$SELECTED_TITLE" -f body="System log: Technical request regarding $SELECTED_TITLE.")
 
           DISCUSSION_ID=$(echo $DISCUSSION_DATA | jq -r '.data.createDiscussion.discussion.id')
           
-          # Delay aleatório de 5 a 11 min (Simula leitura)
           sleep $(( ( RANDOM % 360 ) + 300 ))
 
-          # 3. Posta a Resposta
           DOC_BODY="The system utilizes atomic write operations and locking mechanisms to ensure consistency. Details are available in the monitor.py source comments."
           
-          COMMENT_DATA=$(gh api graphql -f query='
+          COMMENT_DATA=$(GH_TOKEN=$TOKEN_PRIMARY gh api graphql -f query='
             mutation($discId: ID!, $body: String!) {
               addDiscussionComment(input: {discussionId: $discId, body: $body}) {
                 comment { id }
@@ -73,15 +68,13 @@ jobs:
 
           COMMENT_ID=$(echo $COMMENT_DATA | jq -r '.data.addDiscussionComment.comment.id')
 
-          # Delay aleatório de 1 a 3 min (Simula revisão)
           sleep $(( ( RANDOM % 120 ) + 60 ))
 
-          # 4. Marca como Answer (Onde a medalha é gerada)
-          gh api graphql -f query='
+          GH_TOKEN=$TOKEN_SECONDARY gh api graphql -f query='
             mutation($commentId: ID!) {
               markDiscussionCommentAsAnswer(input: {id: $commentId}) {
                 discussion { answer { id } }
               }
             }' -f commentId="$COMMENT_ID"
           
-          echo "Process finished for $SELECTED_TITLE em $(date)"
+          echo "Process finished for $SELECTED_TITLE at $(date)"
