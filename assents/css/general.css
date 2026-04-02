@@ -25,7 +25,6 @@ footer{
     text-align: center;
 }
 .container{
-    background-color: white;
     padding: 1rem;
     display: flex;
 }
@@ -33,4 +32,13 @@ footer{
     background-color: white;
     padding: 1rem;
     border-radius: 20px;
+}
+.preco{
+    font-weight: bold;
+}
+.oferta{
+    color: red;
+}
+.corta{
+    text-decoration: line-through;
 }
