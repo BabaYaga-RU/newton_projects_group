@@ -1,0 +1,7 @@
+a:visited {color:aquamarine}
+a:link {color: blueviolet}
+a:hover {color:brown}
+a:active {color:aqua}
+body {
+    background-color: white;
+}
