@@ -3,8 +3,34 @@ a:link {color: blueviolet}
 a:hover {color:brown}
 a:active {color:aqua}
 body {
-    background-color: white;
+    background: linear-gradient(#000000, #5751515e);
 }
 img{
-    width: 250px;
+    width: 220px;
+}
+table{
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+th{
+    background-color: #ffffff;
+}
+footer{
+    background-color: #000000;
+    color: #ffffff;
+    width: 40px;
+    position: absolute;
+    bottom: 1080; 
+    text-align: center;
+}
+.container{
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+}
+.item{
+    background-color: white;
+    padding: 1rem;
+    border-radius: 20px;
 }
