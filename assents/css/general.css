@@ -27,6 +27,7 @@ footer{
 .container{
     padding: 1rem;
     display: flex;
+    gap: 20px;
 }
 .item{
     background-color: white;
@@ -41,4 +42,7 @@ footer{
 }
 .corta{
     text-decoration: line-through;
+}
+.fundo{
+    background-color: white;
 }
