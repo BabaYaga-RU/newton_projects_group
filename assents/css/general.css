@@ -9,9 +9,7 @@ img{
     width: 220px;
 }
 table{
-    display: flex;
-    justify-content: center;
-    min-height: 100vh;
+    display: table;
 }
 th{
     background-color: #ffffff;
@@ -33,6 +31,8 @@ footer{
     
 
   
+    align-items: center;
+    gap: 5px;
 }
 .item{
     background-color: white;
@@ -77,3 +77,9 @@ footer{
 }
 
 
+.fundo{
+    background-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+}
