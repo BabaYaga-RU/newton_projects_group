@@ -27,6 +27,12 @@ footer{
 .container{
     padding: 1rem;
     display: flex;
+    margin-top: 300px;
+    margin-left: 700px;
+  
+    
+
+  
 }
 .item{
     background-color: white;
@@ -44,5 +50,30 @@ footer{
 }
 .titulo{
      color: #cc1c1c;
+     text-align: center;
 
 }
+.titulu{
+    color:aqua
+     
+}
+#frete {
+    width: 100px;
+   
+}
+.textofrete{
+    display: flex;
+    flex-direction: column;
+}
+
+.frete-box {
+   
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: -450px; /* move o conjunto todo */
+    margin-left: 400px;
+    
+}
+
+

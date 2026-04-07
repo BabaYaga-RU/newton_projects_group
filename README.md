@@ -6,8 +6,8 @@ Um pequeno site de compras, contendo 4 opções:
         o No mínimo dois produtos em destaque
         o No mínimo uma notícia
     2. Uma pagina contendo uma listagem maior de produtos
-    3. Uma página contendo os produtos que o usuário selecionou, simular um carrinho. Destaco que aqui
-    é somente HTML.
+    3. Uma página contendo os produtos que o usuário selecionou, simular um carrinho. 
+    Destaco que aqui é somente HTML.
     4. Uma página de “fale conosco” com um formulário e campos a serem preenchidos.
 Observações em relação ao site:
     • A estrutura do site deve contemplar cabeçalho e rodapé, o que isso quer dizer, na parte de cima do
