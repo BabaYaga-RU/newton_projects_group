@@ -4,3 +4,9 @@
 img{
     width: 210px;
 }
+.RTT{
+    height: 280px;
+    display: flex;
+    flex-direction: column-reverse;
+    margin-top: auto;
+}
