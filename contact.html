@@ -19,7 +19,7 @@
                     <th align="right" class="reduzir_coluna"><a href="contact.html">Contato</a></th>
                 </tr>
                 <tr>
-                    <th colspan="2"><textarea style="width: 100%;"></textarea></th>
+                    <th colspan="2"><input type="search" style=" width: 100%; height: 30px;"></th>
                     <th><a href="products.html"><button style="background-color: var(--cor-terciaria); color: var(--cor-secundaria); border-radius: 5px;">🔍︎</button></a></th>
                 </tr>
             </table>
@@ -33,8 +33,18 @@
                 <label for="endereco">E-mail: </label>
                 <input type="text" nome="rua" placeholder="Sua E-mail aqui">
             </br>
-            <label for="solitacao">Motivo da solitação: </label></br>
-            <textarea name="solitacao" placeholder="Digite aqui a sua solitação"></textarea>
+            <input type="radio" name="tipo_contato" id="ajuda"> 
+            <label for="ajuda">Ajuda para Finalizar a compra</label>
+
+            <input type="radio" name="tipo_contato" id="elogio"> 
+            <label for="elogio">Elogio</label>
+
+            <input type="radio" name="tipo_contato" id="reclamacao" disabled> 
+            <label for="reclamacao">Reclamação</label>
+            
+            </br>
+            <label for="solitacao">Solitação: </label></br>
+            <textarea name="solitacao" placeholder="Digite aqui a sua solitação" style="width: 100%; height: 80px;"></textarea>
             </br>
             <button type="submit" name="enviar">Enviar</button>
             </form>

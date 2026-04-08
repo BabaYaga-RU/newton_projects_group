@@ -19,7 +19,7 @@
                     <th align="right" class="reduzir_coluna"><a href="contact.html">Contato</a></th>
                 </tr>
                 <tr>
-                    <th colspan="2"><textarea style="width: 100%;"></textarea></th>
+                    <th colspan="2"><input type="search" style=" width: 100%; height: 30px;"></th>
                     <th><a href="products.html"><button style="background-color: var(--cor-terciaria); color: var(--cor-secundaria); border-radius: 5px;">🔍︎</button></a></th>
                 </tr>
             </table>
@@ -83,7 +83,7 @@
                         <option value="15">Paraná (PR)</option>
                         <option value="16">Pernambuco (PE)</option>
                         <option value="17">Piauí (PI)</option>
-                        <option value="18">Rio de Janeiro (RJ)</option>
+                        <option value="18" disabled>Rio de Janeiro (RJ)</option>
                         <option value="19">Rio Grande do Norte (RN)</option>
                         <option value="20">Rio Grande do Sul (RS)</option>
                         <option value="21">Rondônia (RO)</option>
@@ -98,33 +98,33 @@
                     </br>
                     <table>
                         <tr>
-                            <td>
-                                <input type="checkbox"> Cartão de crédito
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> Cartão de crédito
                             </td>
-                            <td>
-                                <input type="checkbox"> Cartão de débito
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> Cartão de débito
                             </td>
-                            <td>
-                                <input type="checkbox"> PIX
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> PIX
                             </td>
                         </tr>
                         <tr>
-                            <td>
-                                <input type="checkbox"> Boleto
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> Boleto
                             </td>
-                            <td>
-                                <input type="checkbox"> Dogcoin
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> Dogcoin
                             </td>
-                            <td>
-                                <input type="checkbox"> Carnê Casas Bahia
+                            <td align="left">
+                                <input type="radio" name="tipo_pagamento_ops"> Carnê Casas Bahia
                             </td>
                         </tr>
                     </table>
                     <label for="tipo_parcelamento">Parcelamento: </label>
                     </br>
-                    <input type="radio"> À Vista
-                    <input type="radio"> 2x
-                    <input type="radio"> 3x
+                    <input type="radio" name="parcelamento"> À Vista
+                    <input type="radio" name="parcelamento"> 2x
+                    <input type="radio" name="parcelamento"> 3x
                     </br></br>
                     <label for="observacao">Observação: </label></br>
                     <textarea name="observacao" placeholder="Digite aqui a sua Observação" class="textarea_obs"></textarea>

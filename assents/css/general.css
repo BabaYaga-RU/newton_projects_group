@@ -1,5 +1,5 @@
 :root{
-    --cor-primaria: #000000;
+    --cor-primaria: #1A1C3D;
     --cor-secundaria: #ffffff;
     --cor-terciaria: #2B2E63;
     --cor-destaque: #cc1c1c;
@@ -77,6 +77,11 @@ table{
     width: 100%;
     margin: 20px auto; 
     text-align: center;
+}
+button{
+    background-color: var(--cor-terciaria); 
+    color: var(--cor-secundaria); 
+    border-radius: 5px;
 }
 footer{
     background-color: var(--cor-primaria);

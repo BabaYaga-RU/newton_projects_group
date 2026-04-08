@@ -2,3 +2,6 @@ button{
     display: block;
     margin: 20px auto; 
 }
+input{
+    margin: 1px;
+}
