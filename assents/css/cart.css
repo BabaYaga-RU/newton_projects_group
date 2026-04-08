@@ -4,7 +4,7 @@ p{
 input{
     margin: 1px;
 }
-textarea{
+.textarea_obs{
     width: 39%;
     height: 80px;
 }

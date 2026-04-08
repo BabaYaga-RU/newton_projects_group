@@ -1,17 +1,37 @@
 :root{
     --cor-primaria: #000000;
     --cor-secundaria: #ffffff;
-    --cor-terciaria: #cc1c1c;
+    --cor-terciaria: #2B2E63;
     --cor-destaque: #cc1c1c;
     --cor-fundo-gradiente: #5751515e;
 }
 
 /*Para links - ainda nao usado*/
-a:visited {color:aquamarine}
-a:link {color: blueviolet}
-a:hover {color:brown}
-a:active {color:aqua}
-
+a:link {color: var(--cor-secundaria)}
+a:hover {color:var(--cor-destaque)}
+a:visited {color:var(--cor-secundaria)}
+a:active {color:var(--cor-destaque)}
+.cabecalho{
+    background-color: var(--cor-secundaria);
+    border-radius: 5px;
+    margin: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: row;
+    a:link {color: var(--cor-terciaria)}
+    a:hover {color:var(--cor-destaque)}
+    a:visited {color:var(--cor-primaria)}
+    a:active {color:var(--cor-destaque)}
+}
+.sessao_cabecalho{
+    background-color: var(--cor-secundaria);
+    padding: 1rem;
+    border-radius: 20px;
+    flex-grow: 1;
+}
+.reduzir_coluna{
+    width: 80px;
+}
 body {
     background: linear-gradient(var(--cor-primaria), var(--cor-fundo-gradiente));
     min-height: 100vh;
@@ -47,6 +67,10 @@ th{
     padding: 5px;
     display: flex;
     flex-direction: column;
+    a:link {color: var(--cor-primaria)}
+    a:hover {color:var(--cor-destaque)}
+    a:visited {color:var(--cor-primaria)}
+    a:active {color:var(--cor-destaque)}
 }
 table{
     /* display: flex; */ /* Nao usar display em tabela */
