@@ -1,0 +1,27 @@
+#frete {
+    width: 100px;
+}
+.textofrete{
+    display: flex;
+    flex-direction: column;
+}
+.frete-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+.item{
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+.preco{
+    font-weight: bold;
+}
+.oferta{
+    color: var(--cor-destaque);
+}
+.corta{
+    text-decoration: line-through;
+}

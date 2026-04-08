@@ -1,85 +1,63 @@
+:root{
+    --cor-primaria: #000000;
+    --cor-secundaria: #ffffff;
+    --cor-terciaria: #cc1c1c;
+    --cor-destaque: #cc1c1c;
+    --cor-fundo-gradiente: #5751515e;
+}
+
+/*Para links - ainda nao usado*/
 a:visited {color:aquamarine}
 a:link {color: blueviolet}
 a:hover {color:brown}
 a:active {color:aqua}
+
 body {
-    background: linear-gradient(#000000, #5751515e);
+    background: linear-gradient(var(--cor-primaria), var(--cor-fundo-gradiente));
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 img{
     width: 220px;
 }
-table{
-    display: table;
-}
 th{
-    background-color: #ffffff;
-}
-footer{
-    background-color: #000000;
-    color: #ffffff;
-    width: 40px;
-    position: absolute;
-    bottom: 1080; 
-    text-align: center;
+    background-color: var(--cor-secundaria);
 }
 .container{
     padding: 1rem;
     display: flex;
-    margin-top: 300px;
-    margin-left: 700px;
-  
-    
-
-  
     align-items: center;
     gap: 5px;
 }
 .item{
-    background-color: white;
+    background-color: var(--cor-secundaria);
     padding: 1rem;
     border-radius: 20px;
 }
-.preco{
-    font-weight: bold;
-}
-.oferta{
-    color: red;
-}
-.corta{
-    text-decoration: line-through;
-}
 .titulo{
-     color: #cc1c1c;
-     text-align: center;
-
+    color: var(--cor-terciaria);
+    text-align: center;
 }
-.titulu{
-    color:aqua
-     
-}
-#frete {
-    width: 100px;
-   
-}
-.textofrete{
-    display: flex;
-    flex-direction: column;
-}
-
-.frete-box {
-   
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: -450px; /* move o conjunto todo */
-    margin-left: 400px;
-    
-}
-
-
 .fundo{
-    background-color: white;
+    background-color: var(--cor-secundaria);
     border-radius: 5px;
     margin: 5px;
     padding: 5px;
+    display: flex;
+    flex-direction: column;
+}
+table{
+    /* display: flex; */ /* Nao usar display em tabela */
+    width: 100%;
+    margin: 20px auto; 
+    text-align: center;
+}
+footer{
+    background-color: var(--cor-primaria);
+    color: var(--cor-secundaria);
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
 }

@@ -1,0 +1,24 @@
+p{
+    margin: 0px;
+}
+input{
+    margin: 1px;
+}
+textarea{
+    width: 39%;
+    height: 80px;
+}
+button{
+    display: block;
+    margin: 20px auto;
+}
+.container_venda{
+    display: flex;
+    gap: 2px;
+}
+.sessao{
+    background-color: var(--cor-secundaria);
+    padding: 1rem;
+    border-radius: 20px;
+    flex: 1; /* Dividir a tela */
+}
