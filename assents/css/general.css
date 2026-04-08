@@ -83,6 +83,15 @@ button{
     color: var(--cor-secundaria); 
     border-radius: 5px;
 }
+.preco{
+    font-weight: bold;
+}
+.oferta{
+    color: var(--cor-destaque);
+}
+.corta{
+    text-decoration: line-through;
+}
 footer{
     background-color: var(--cor-primaria);
     color: var(--cor-secundaria);
