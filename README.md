@@ -21,3 +21,7 @@ Observações em relação ao site:
     • Todas as páginas criadas devem apresentar um menu navegável, criar links locais entre as páginas
     .html, por exemplo, se o usuário estiver na página inicial ele conseguirá ir para a página com a
     listagem de produtos, e vice versa;
+
+
+<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
+<dotlottie-wc src="https://lottie.host/16cc7d86-e4a1-462b-9a08-ff54bd799db0/BCDjUIenth.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
