@@ -53,18 +53,23 @@
                 <h3>Preencha os seus dados para finalizar a compra</h1>
                 <form action="resposta.php" method="get">
                     <label for="nome">Nome: </label>
-                    <input type="text" nome="nome" placeholder="Seu nome aqui">
-                    </br>
+                    <input type="text" name="nome" placeholder="Seu nome aqui">
+                    <br/>
+                
                     <label for="endereco">Endereço: </label>
-                    <input type="text" nome="rua" placeholder="Sua Rua aqui">
-                    </br>
+                    <input type="text" name="rua" placeholder="Sua Rua aqui">
+                    <br/>
+                
                     <label for="bairro">Bairro: </label>
-                    <input type="text" nome="bairro" placeholder="Seu Bairro aqui">
+                    <input type="text" name="bairro" placeholder="Seu Bairro aqui">
+                
                     <label for="cidade">Cidade: </label>
                     <input type="text" name="cidade" placeholder="Sua Cidade aqui">
-                    </br>   
-                    <label type="cep">CEP</label>
-                    <input type="number" name="cep" value="Seu Cep" max="9999999">  
+                    <br/>   
+                
+                    <label for="cep">CEP</label>
+                    <input type="number" name="cep" placeholder="Apenas números" max="99999999">  
+                
                     <label for="estado">Estado</label>
                     <select name="estado">
                         <option value="1">Acre (AC)</option>
@@ -130,8 +135,8 @@
                     <label for="observacao">Observação: </label></br>
                     <textarea name="observacao" placeholder="Digite aqui a sua Observação" class="textarea_obs"></textarea>
                     </br></br>
-                    <button type="submit" name="comprar" disabled>Comprar 🛒</button>
-                </form>
+                    <button type="submit" name="comprar">Comprar 🛒</button>
+                </form>    
             </div>
         </div>
     </body>
