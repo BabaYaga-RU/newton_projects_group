@@ -1,27 +1,26 @@
-Hospedado em https://newton-projects-group.onrender.com
+Sobre o projeto
+
+O BobblePop Store é um site fictício de compras desenvolvido como atividade prática utilizando HTML e CSS. O sistema simula uma pequena loja virtual, apresentando uma página inicial com produtos em destaque e promoção, uma página com listagem ampliada de produtos, uma página de carrinho com resumo do pedido e formulário de compra, além de uma página de contato para comunicação com o usuário.
 
 
-Entrega 15/04
+Funcionalidades
 
-1) Criar um Site em HTML seguindo as seguintes características:
-Um pequeno site de compras, contendo 4 opções:
-    1. Página inicial contendo os seguintes itens:
-        o No mínimo dois produtos em destaque
-        o No mínimo uma notícia
-    2. Uma pagina contendo uma listagem maior de produtos
-    3. Uma página contendo os produtos que o usuário selecionou, simular um carrinho. 
-    Destaco que aqui é somente HTML.
-    4. Uma página de “fale conosco” com um formulário e campos a serem preenchidos.
-Observações em relação ao site:
-    • A estrutura do site deve contemplar cabeçalho e rodapé, o que isso quer dizer, na parte de cima do
-    site deve ser colocada uma imagem com o nome do site, e no rodapé devem ser colocadas
-    informações relativas ao contato do desenvolvedor (Nome, telefone e e-mail)
-    • Todos os produtos (Produtos em destaque e na listagem) devem apresentar uma imagem ilustrativa,
-    uma pequena descrição e um link com o texto “Adicionar ao carrinho”;
-    • Todas as páginas criadas devem apresentar um menu navegável, criar links locais entre as páginas
-    .html, por exemplo, se o usuário estiver na página inicial ele conseguirá ir para a página com a
-    listagem de produtos, e vice versa;
+- Página inicial com produtos em destaque e oferta promocional
+- Página de produtos com catálogo ampliado
+- Página de carrinho simulando os itens selecionados
+- Página de contato com formulário
+- Menu de navegação entre todas as páginas
+- Cabeçalho e rodapé padronizados
 
+Tecnologias utilizadas
 
-<script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.9.10/dist/dotlottie-wc.js" type="module"></script>
-<dotlottie-wc src="https://lottie.host/16cc7d86-e4a1-462b-9a08-ff54bd799db0/BCDjUIenth.lottie" style="width: 300px;height: 300px" autoplay loop></dotlottie-wc>
+- HTML5 para a estrutura das páginas
+- CSS3 para estilização e layout
+- Lottie Web Component** para animação visual na página inicial
+
+Como acessar:
+
+1. Faça o download ou clone este repositório: git clone https://github.com/BabaYaga-RU/newton_projects_group.git
+2. Acesse a pasta do projeto.
+3. Abra o arquivo index.html em qualquer navegador de sua preferência.
+4. Para o site hospedado: https://newton-projects-group.onrender.com/
