@@ -25,31 +25,35 @@
                 </tr>
             </table>
         </div>
-        <div class="fundo">
-            <h3 style="text-align: center;"> Faça a sua solitação de contato</h1>
-            <form action="resposta.php" method="get">
-                <label for="nome">Nome: </label>
-                <input type="text" nome="nome" placeholder="Seu nome aqui">
-                </br>
-                <label for="endereco">E-mail: </label>
-                <input type="text" nome="rua" placeholder="Sua E-mail aqui">
-            </br>
-            <input type="radio" name="tipo_contato" id="ajuda"> 
+       <div class="fundo">
+        <h3 style="text-align: center;">Faça a sua solicitação de contato</h3>
+        
+        <form action="resposta.php" method="get">
+            <label for="nome">Nome: </label>
+            <input type="text" name="nome" placeholder="Seu nome aqui">
+            <br>
+    
+            <label for="email">E-mail: </label>
+            <input type="email" name="email" placeholder="Seu E-mail aqui">
+            <br>
+    
+            <input type="radio" name="tipo_contato" id="ajuda" value="ajuda"> 
             <label for="ajuda">Ajuda para Finalizar a compra</label>
-
-            <input type="radio" name="tipo_contato" id="elogio"> 
+    
+            <input type="radio" name="tipo_contato" id="elogio" value="elogio"> 
             <label for="elogio">Elogio</label>
-
-            <input type="radio" name="tipo_contato" id="reclamacao" disabled> 
-            <label for="reclamacao">Reclamação</label>
+    
+            <input type="radio" name="tipo_contato" id="reclamacao" value="reclamacao" disabled> 
+            <label for="reclamacao">Reclamação (Desativado)</label>
             
-            </br>
-            <label for="solitacao">Solitação: </label></br>
-            <textarea name="solitacao" placeholder="Digite aqui a sua solitação" style="width: 100%; height: 80px;"></textarea>
-            </br>
-            <button type="submit" name="enviar" disabled>Enviar</button>
-            </form>
-        </div>
+            <br>
+            <label for="solicitacao">Solicitação: </label><br>
+            <textarea name="solicitacao" placeholder="Digite aqui a sua solicitação" style="width: 100%; height: 80px;"></textarea>
+            <br>
+    
+            <button type="submit" name="enviar">Enviar</button>
+        </form>
+    </div>
     </body>
     <footer>
         <table>
