@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cadastro de Produtos</title>
+        <link rel="stylesheet" href="assents/css/general.css">
+        <link rel="stylesheet" href="assents/css/products.css">
+        <link rel="icon" href="assents/img/favicon.png">
+        <style>
+            .crud-container{
+                padding: 1rem;
+                display: flex;
+                gap: 1rem;
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+            .formulario-produto,
+            .lista-produtos{
+                background-color: var(--cor-secundaria);
+                color: var(--cor-primaria);
+                padding: 1rem;
+                border-radius: 20px;
+            }
+            .formulario-produto{
+                width: 320px;
+            }
+            .lista-produtos{
+                flex: 1;
+                min-width: 320px;
+                overflow-x: auto;
+            }
+            .formulario-produto label{
+                display: block;
+                margin-top: 10px;
+                font-weight: bold;
+            }
+            .formulario-produto input,
+            .formulario-produto select{
+                width: 100%;
+                height: 32px;
+                margin-top: 4px;
+            }
+            .checkbox-produto{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            .checkbox-produto input{
+                width: auto;
+                height: auto;
+                margin: 0;
+            }
+            .botoes-formulario,
+            .acoes-produto{
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+                margin-top: 12px;
+            }
+            .botao-secundario{
+                background-color: #666666;
+            }
+            .botao-perigo{
+                background-color: var(--cor-destaque);
+            }
+            .tabela-produtos{
+                width: 100%;
+                border-collapse: collapse;
+                margin: 0;
+                text-align: left;
+            }
+            .tabela-produtos th{
+                background-color: var(--cor-terciaria);
+                color: var(--cor-secundaria);
+            }
+            .tabela-produtos td,
+            .tabela-produtos th{
+                padding: 8px;
+                border-bottom: 1px solid #dddddd;
+            }
+            .miniatura-produto{
+                width: 70px;
+                height: 70px;
+                object-fit: contain;
+            }
+            .produto-indisponivel{
+                color: var(--cor-destaque);
+                font-weight: bold;
+            }
+            @media(max-width: 700px){
+                .formulario-produto,
+                .lista-produtos{
+                    width: 100%;
+                    min-width: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="cabecalho">
+            <table>
+                <tr>
+                    <th colspan="2" align="left"><a href="index.html"><img src="assents/img/Logo.png"></a></th>
+                    <th align="right" class="reduzir_coluna"><a href="index.html">Home</a></th>
+                    <th align="right"> | </th>
+                    <th align="right" class="reduzir_coluna"><a href="products.html">Produtos</a></th>
+                    <th align="right"> | </th>
+                    <th align="right" class="reduzir_coluna"><a href="crud-produtos.html">Cadastro</a></th>
+                    <th align="right"> | </th>
+                    <th align="right" class="reduzir_coluna"><a href="cart.html">Carrinho</a></th>
+                    <th align="right"> | </th>
+                    <th align="right" class="reduzir_coluna"><a href="contact.html">Contato</a></th>
+                </tr>
+                <tr>
+                    <th colspan="2"><input type="search" style=" width: 100%; height: 30px;"></th>
+                    <th><a href="products.html"><button style="background-color: var(--cor-terciaria); color: var(--cor-secundaria); border-radius: 5px;">Buscar</button></a></th>
+                </tr>
+            </table>
+        </div>
+
+        <div class="fundo">
+            <h2>Cadastro de Produtos</h2>
+        </div>
+
+        <div id="root"></div>
+
+        <footer>
+            <table>
+                <tr>
+                    <td>Acessibilidade</td>
+                    <td>Contato</td>
+                    <td>Trabalhe conosco</td>
+                    <td>Termos e condicoes</td>
+                </tr>
+                <tr>
+                    <td>Em postergacao</td>
+                    <td><a href="contact.html">Formulario</a></td>
+                    <td>Limite do grupo atingido</td>
+                    <td>Nao reclamar do site</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>4002-8922</td>
+                </tr>
+            </table>
+            <p style="text-align: center; margin: 0px;">Copyright &copy; 59ac-2026 BobblePop Store LTDA.</p>
+            <br>
+        </footer>
+
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script type="text/babel">
+            const produtosIniciais = [
+                { id: 1, nome: "Gerente de Memoria de Curto Prazo", colecao: "Xing Paiva", preco: "R$ 80,00", precoAntigo: "R$ 100,00", oferta: "20% off", imagem: "assents/img/ex_inter.png", disponivel: true },
+                { id: 2, nome: "Arquiteto de Planilhas", colecao: "Xing Paiva", preco: "R$ 80,00", precoAntigo: "R$ 100,00", oferta: "20% off", imagem: "assents/img/sem_forca.png", disponivel: true },
+                { id: 3, nome: "Estilista de Sites", colecao: "Xing Paiva", preco: "R$ 80,00", precoAntigo: "R$ 100,00", oferta: "20% off", imagem: "assents/img/bkrsedu.png", disponivel: true },
+                { id: 4, nome: "Analista de Fila que Nao Anda", colecao: "Xing Paiva", preco: "R$ 80,00", precoAntigo: "R$ 100,00", oferta: "20% off", imagem: "assents/img/sem_limite.png", disponivel: true },
+                { id: 5, nome: "Fiscal de Brilho de Piso", colecao: "Xing Paiva", preco: "R$ 80,00", precoAntigo: "R$ 100,00", oferta: "20% off", imagem: "assents/img/temporario.png", disponivel: true },
+                { id: 6, nome: "Qua", colecao: "Patolica", preco: "R$ 180,00", precoAntigo: "", oferta: "", imagem: "assents/img/Qua.png", disponivel: true },
+                { id: 7, nome: "Quatolico", colecao: "Patolica", preco: "R$ 220,00", precoAntigo: "", oferta: "", imagem: "assents/img/Quatolico.png", disponivel: true },
+                { id: 8, nome: "QuaNineNine Pop", colecao: "Patolica", preco: "R$ 80,00", precoAntigo: "", oferta: "", imagem: "assents/img/QuaNineNine.png", disponivel: true },
+                { id: 9, nome: "Quadio", colecao: "Patolica", preco: "R$ 999,99", precoAntigo: "", oferta: "", imagem: "assents/img/Quadio.png", disponivel: true },
+                { id: 10, nome: "Quarrabas", colecao: "Patolica", preco: "R$ 333,00", precoAntigo: "", oferta: "", imagem: "assents/img/Quarrabas.png", disponivel: true },
+                { id: 11, nome: "Mano Cota", colecao: "Federel", preco: "R$ 171,00", precoAntigo: "", oferta: "", imagem: "assents/img/Mano Cota.png", disponivel: true },
+                { id: 12, nome: "Popular Boy", colecao: "Federel", preco: "Descontinuado", precoAntigo: "", oferta: "", imagem: "assents/img/Popular Boy.png", disponivel: false },
+                { id: 13, nome: "Facislle", colecao: "Federel", preco: "R$ 69,17", precoAntigo: "", oferta: "", imagem: "assents/img/Facislle.png", disponivel: true },
+                { id: 14, nome: "Atrasadito", colecao: "Federel", preco: "R$ 66,69", precoAntigo: "", oferta: "", imagem: "assents/img/Atrasadito.png", disponivel: true },
+                { id: 15, nome: "Comboio Standart", colecao: "Federel", preco: "R$ 25,00", precoAntigo: "R$ 6,25", oferta: "205% on", imagem: "assents/img/Comboio Standart.png", disponivel: true }
+            ];
+
+            const produtoVazio = {
+                nome: "",
+                colecao: "Xing Paiva",
+                preco: "",
+                precoAntigo: "",
+                oferta: "",
+                imagem: "",
+                disponivel: true
+            };
+
+            function carregarProdutos() {
+                const produtosSalvos = localStorage.getItem("produtosBobblePop");
+
+                if (produtosSalvos) {
+                    return JSON.parse(produtosSalvos);
+                }
+
+                return produtosIniciais;
+            }
+
+            function App() {
+                const [produtos, setProdutos] = React.useState(carregarProdutos);
+                const [produto, setProduto] = React.useState(produtoVazio);
+                const [editandoId, setEditandoId] = React.useState(null);
+
+                function salvarLista(novaLista) {
+                    setProdutos(novaLista);
+                    localStorage.setItem("produtosBobblePop", JSON.stringify(novaLista));
+                }
+
+                function alterarCampo(evento) {
+                    const nomeCampo = evento.target.name;
+                    const valorCampo = evento.target.type === "checkbox" ? evento.target.checked : evento.target.value;
+
+                    setProduto({
+                        ...produto,
+                        [nomeCampo]: valorCampo
+                    });
+                }
+
+                function limparFormulario() {
+                    setProduto(produtoVazio);
+                    setEditandoId(null);
+                }
+
+                function cadastrarProduto(evento) {
+                    evento.preventDefault();
+
+                    if (produto.nome.trim() === "" || produto.preco.trim() === "") {
+                        alert("Preencha o nome e o preco do produto.");
+                        return;
+                    }
+
+                    const dadosProduto = {
+                        ...produto,
+                        nome: produto.nome.trim(),
+                        colecao: produto.colecao.trim(),
+                        preco: produto.preco.trim(),
+                        precoAntigo: produto.precoAntigo.trim(),
+                        oferta: produto.oferta.trim(),
+                        imagem: produto.imagem.trim() || "assents/img/temporario.png"
+                    };
+
+                    if (editandoId) {
+                        const produtosAtualizados = produtos.map((item) => {
+                            if (item.id === editandoId) {
+                                return { ...dadosProduto, id: editandoId };
+                            }
+
+                            return item;
+                        });
+
+                        salvarLista(produtosAtualizados);
+                    } else {
+                        const novoProduto = {
+                            ...dadosProduto,
+                            id: Date.now()
+                        };
+
+                        salvarLista([...produtos, novoProduto]);
+                    }
+
+                    limparFormulario();
+                }
+
+                function editarProduto(item) {
+                    setProduto({ ...item });
+                    setEditandoId(item.id);
+                }
+
+                function excluirProduto(id) {
+                    const produtosFiltrados = produtos.filter((item) => String(item.id) !== String(id));
+                    setProdutos(produtosFiltrados);
+                    localStorage.setItem("produtosBobblePop", JSON.stringify(produtosFiltrados));
+
+                    if (String(editandoId) === String(id)) {
+                        limparFormulario();
+                    }
+                }
+
+                return (
+                    <div className="crud-container">
+                        <form className="formulario-produto" onSubmit={cadastrarProduto}>
+                            <h3>{editandoId ? "Editar produto" : "Novo produto"}</h3>
+
+                            <label htmlFor="nome">Nome</label>
+                            <input id="nome" name="nome" type="text" value={produto.nome} onChange={alterarCampo} />
+
+                            <label htmlFor="colecao">Colecao</label>
+                            <select id="colecao" name="colecao" value={produto.colecao} onChange={alterarCampo}>
+                                <option value="Xing Paiva">Xing Paiva</option>
+                                <option value="Patolica">Patolica</option>
+                                <option value="Federel">Federel</option>
+                            </select>
+
+                            <label htmlFor="preco">Preco</label>
+                            <input id="preco" name="preco" type="text" value={produto.preco} onChange={alterarCampo} />
+
+                            <label htmlFor="precoAntigo">Preco antigo</label>
+                            <input id="precoAntigo" name="precoAntigo" type="text" value={produto.precoAntigo} onChange={alterarCampo} />
+
+                            <label htmlFor="oferta">Oferta</label>
+                            <input id="oferta" name="oferta" type="text" value={produto.oferta} onChange={alterarCampo} />
+
+                            <label htmlFor="imagem">Imagem</label>
+                            <input id="imagem" name="imagem" type="text" value={produto.imagem} onChange={alterarCampo} placeholder="assents/img/temporario.png" />
+
+                            <div className="checkbox-produto">
+                                <input id="disponivel" name="disponivel" type="checkbox" checked={produto.disponivel} onChange={alterarCampo} />
+                                <label htmlFor="disponivel">Disponivel para venda</label>
+                            </div>
+
+                            <div className="botoes-formulario">
+                                <button type="submit">{editandoId ? "Salvar edicao" : "Cadastrar produto"}</button>
+                                <button type="button" className="botao-secundario" onClick={limparFormulario}>Limpar</button>
+                            </div>
+                        </form>
+
+                        <div className="lista-produtos">
+                            <h3>Produtos cadastrados ({produtos.length})</h3>
+                            <table className="tabela-produtos">
+                                <thead>
+                                    <tr>
+                                        <th>Imagem</th>
+                                        <th>Nome</th>
+                                        <th>Colecao</th>
+                                        <th>Preco</th>
+                                        <th>Oferta</th>
+                                        <th>Status</th>
+                                        <th>Acoes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {produtos.map((item) => (
+                                        <tr key={item.id}>
+                                            <td><img className="miniatura-produto" src={item.imagem} alt={item.nome} /></td>
+                                            <td>{item.nome}</td>
+                                            <td>{item.colecao}</td>
+                                            <td>
+                                                <span className="preco">{item.preco}</span>
+                                                {item.precoAntigo && <span className="corta"> {item.precoAntigo}</span>}
+                                            </td>
+                                            <td className="oferta">{item.oferta}</td>
+                                            <td className={item.disponivel ? "" : "produto-indisponivel"}>
+                                                {item.disponivel ? "Disponivel" : "Indisponivel"}
+                                            </td>
+                                            <td>
+                                                <div className="acoes-produto">
+                                                    <button type="button" onClick={() => editarProduto(item)}>Editar</button>
+                                                    <button type="button" className="botao-perigo" onClick={() => excluirProduto(item.id)}>Excluir</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                );
+            }
+
+            ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+        </script>
+    </body>
+</html>

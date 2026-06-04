@@ -1,26 +1,44 @@
-Sobre o projeto
+# BobblePop Store
 
-O BobblePop Store é um site fictício de compras desenvolvido como atividade prática utilizando HTML e CSS. O sistema simula uma pequena loja virtual, apresentando uma página inicial com produtos em destaque e promoção, uma página com listagem ampliada de produtos, uma página de carrinho com resumo do pedido e formulário de compra, além de uma página de contato para comunicação com o usuário.
+## Objetivo do sistema
 
+Esse projeto é um site simples de e-commerce feito para a matéria de Programação Web.
 
-Funcionalidades
+A ideia do sistema é simular uma loja online chamada BobblePop Store. O site tem página inicial, página de produtos, carrinho, contato e também uma tela de cadastro de produtos usando React.
 
-- Página inicial com produtos em destaque e oferta promocional
-- Página de produtos com catálogo ampliado
-- Página de carrinho simulando os itens selecionados
-- Página de contato com formulário
-- Menu de navegação entre todas as páginas
-- Cabeçalho e rodapé padronizados
+O carrinho funciona de forma simples: quando o usuário clica em comprar, o produto vai para o carrinho usando o armazenamento do navegador.
 
-Tecnologias utilizadas
+## Funcionalidades
 
-- HTML5 para a estrutura das páginas
-- CSS3 para estilização e layout
-- Lottie Web Component** para animação visual na página inicial
+- Página inicial com alguns produtos em destaque
+- Página com a lista de produtos
+- Botão de comprar enviando o produto para o carrinho
+- Carrinho mostrando os produtos selecionados
+- Total do carrinho calculado automaticamente
+- Botão para limpar o carrinho
+- Página de contato
+- CRUD de produtos em React, com cadastrar, listar, editar e excluir
 
-Como acessar:
+## Tecnologias utilizadas
 
-1. Faça o download ou clone este repositório: git clone https://github.com/BabaYaga-RU/newton_projects_group.git
-2. Acesse a pasta do projeto.
-3. Abra o arquivo index.html em qualquer navegador de sua preferência.
-4. Para o site hospedado: https://newton-projects-group.onrender.com/
+- HTML para montar as páginas
+- CSS para a parte visual do site
+- JavaScript para fazer o carrinho funcionar
+- React.JS por CDN para fazer o CRUD de produtos
+- LocalStorage para guardar os produtos do carrinho e do CRUD no navegador
+- Lottie Web Component usado nas animações da página inicial
+
+## Como executar
+
+Não precisa instalar nada para rodar o projeto.
+
+1. Baixe ou clone o repositório.
+2. Abra a pasta do projeto no computador.
+3. Abra o arquivo `index.html` no navegador.
+4. Para ver os produtos, acesse `products.html`.
+5. Para ver o carrinho, acesse `cart.html`.
+6. Para acessar o CRUD, abra `crud-produtos.html` ou clique em Gerenciar produtos na página de produtos.
+
+## Observação
+
+O projeto foi feito usando arquivos HTML, CSS e JavaScript simples. Como não tem backend, os dados ficam salvos no navegador usando LocalStorage.

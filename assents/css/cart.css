@@ -12,6 +12,13 @@ button{
     display: block;
     margin: 20px auto;
 }
+.remover-item{
+    margin: 10px 0 0 0;
+}
+.carrinho-vazio{
+    width: 100%;
+    text-align: center;
+}
 .container_venda{
     display: flex;
     gap: 2px;
@@ -20,5 +27,5 @@ button{
     background-color: var(--cor-secundaria);
     padding: 1rem;
     border-radius: 20px;
-    flex: 1; /* Dividir a tela */
+    flex: 1;
 }
